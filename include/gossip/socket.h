@@ -8,6 +8,7 @@
 #ifndef GOSSIP_SOCKET_H
 #define GOSSIP_SOCKET_H
 
+#import "common.h"
 #import "object.h"
 
 typedef void (^GossipSocketReceiveBlock)(void *, size_t);
@@ -21,9 +22,9 @@ typedef void (^GossipSocketReceiveBlock)(void *, size_t);
 @property (nonatomic) int protocol;
 @property (nonatomic, readonly) int eid;
 @property (nonatomic, readonly) int fd;
-@property (nonatomic, readonly) BOOL hasError;
-@property (nonatomic, readonly) BOOL isConnected;
-@property (nonatomic, readonly) BOOL isBound;
+@property (readonly) BOOL hasError;
+@property (readonly) BOOL isConnected;
+@property (readonly) BOOL isBound;
 
   /**
    * Returns error string for socket

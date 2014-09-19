@@ -30,3 +30,4 @@ DerivedData
 *.o
 test/object
 test/socket
+test/pipe
