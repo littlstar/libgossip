@@ -210,6 +210,12 @@ typedef void (^GossipSocketReceiveBlock)(void *, size_t);
 @property (nonatomic, readonly) BOOL isBound;
 
   /**
+   * Returns error string for socket
+   */
+
+  + (const char *) Error;
+
+  /**
    * Open socket
    */
 

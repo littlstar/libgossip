@@ -7,11 +7,16 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 #include <nanomsg/nn.h>
 
 #import "gossip.h"
 
 @implementation GossipSocket : GossipObject
+  + (const char *) Error {
+    return nn_strerror(errno);
+  }
+
   - (id) init {
     [super init];
 
