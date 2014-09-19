@@ -192,6 +192,8 @@
 }
 @end
 
+typedef void (^GossipSocketReceiveBlock)(void *, size_t);
+
 /**
  * `GossipSocket' interface
  */
@@ -237,13 +239,38 @@
    * Send buffer with size
    */
 
-  - (id) send: (const char *) buffer size: (size_t) size;
+  - (id) send: (const char *) buffer
+         size: (size_t) size;
 
   /**
    * Send buffer with size and flags
    */
 
-  - (id) send: (const char *) buffer size: (size_t) size flags: (int) flags;
+  - (id) send: (const char *) buffer
+         size: (size_t) size
+        flags: (int) flags;
+
+  /**
+   * Receives a message calling block
+   */
+
+  - (void *) receive: (GossipSocketReceiveBlock);
+
+  /**
+   * Receives a message with size calling block
+   */
+
+  - (void *) receive: (GossipSocketReceiveBlock)
+                size: (size_t) size;
+
+  /**
+   * Receives a message with size calling block
+   */
+
+  - (void *) receive: (GossipSocketReceiveBlock)
+                size: (size_t) size
+               flags: (int) flags;
+
 @end
 
 #endif
