@@ -151,16 +151,22 @@
    * returns results
    */
 
-  + (id) performSelector: (SEL) selector withObject: (id) object;
-  - (id) performSelector: (SEL) selector withObject: (id) object;
+  + (id) performSelector: (SEL) selector
+              withObject: (id) object;
+  - (id) performSelector: (SEL) selector
+              withObject: (id) object;
 
   /**
    * Sends message with two objects to receiver
    * and returns results
    */
 
-  + (id) performSelector: (SEL) selector withObject: (id) object;
-  - (id) performSelector: (SEL) selector withObject: (id) object;
+  + (id) performSelector: (SEL) selector
+              withObject: (id) a
+              withObject: (id) b;
+  - (id) performSelector: (SEL) selector
+              withObject: (id) a
+              withObject: (id) b;
 
   /**
    * Returns a boolean indicating whether the
