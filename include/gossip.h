@@ -181,6 +181,8 @@
 
   - (id) forward: (SEL) selector : (va_list) args;
 
+  - (id) receive: (SEL) selector : (va_list) args;
+
 @end
 
 /**
@@ -198,12 +200,16 @@ typedef void (^GossipSocketReceiveBlock)(void *, size_t);
  * `GossipSocket' interface
  */
 
-@interface GossipSocket : GossipObject <GossipObjectProtocol>
+@interface GossipSocket : GossipObject <GossipObjectProtocol> {
+  int _errno;
+}
+
 @property (nonatomic) int fd;
 @property (nonatomic) int domain;
 @property (nonatomic) int protocol;
 @property (nonatomic) BOOL isConnected;
 @property (nonatomic) BOOL isBound;
+@property (nonatomic, readonly) int errno = _errno;
 
   /**
    * Open socket

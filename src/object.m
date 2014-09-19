@@ -47,6 +47,11 @@
     return nil;
   }
 
+  - (id) receive: (SEL) selector : (va_list) args {
+    [self doesNotRecognizeSelector: selector];
+    return nil;
+  }
+
   + (void) finalize { }
   - (void) finalize { }
 

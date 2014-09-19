@@ -26,6 +26,7 @@
     _fd = nn_socket(_domain, _protocol);
     if (-1 == _fd) {
       perror("[GossipSocket open]");
+      _errno = _fd;
       // @TODO - handle with error
     }
     return self;
