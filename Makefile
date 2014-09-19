@@ -7,8 +7,9 @@ VERSION ?= 0.0.1
 SRC = $(wildcard src/*.m)
 OBJS = $(SRC:.m=.o)
 
-TEST = cc
+TEST =
 TESTS = $(wildcard test/*.m)
+TESTSC = $(TESTS:.m=)
 
 TARGET_LIBRAY = libgossip.so
 
@@ -23,7 +24,7 @@ endif
 
 .PHONY: $(OBJS) $(TARGET_LIBRAY) $(TESTS)
 
-all: $(TARGET_LIBRAY) $(TESTS)
+all: $(TARGET_LIBRAY) test
 
 $(TARGET_LIBRAY): $(OBJS)
 	$(CC) $(LDFLAGS) $(OBJS)
@@ -32,10 +33,18 @@ $(TARGET_LIBRAY): $(OBJS)
 $(OBJS):
 	$(CC) $(CFLAGS) -c $(@:.o=.m) -o $(@)
 
-test: $(TESTS)
+test: $(TESTSC)
 $(TESTS): $(TARGET_LIBRAY)
-	$(TEST) $(CFLAGS) -lobjc $(TARGET_LIBRAY) $(@) -o $(@:.m=)
-	@./$(@:.m=)
+	$(CC) $(CFLAGS) -lobjc $(TARGET_LIBRAY) $(@) -o $(@:.m=)
+
+$(TESTSC): $(TESTS)
+	$(TEST)
+	@if [ "test/pipe" == "$(@)" ]; then \
+		./$(@) pull & sleep 1; \
+		./$(@) push & wait; \
+	else \
+		./$(@); \
+	fi;
 
 clean:
 	rm -f $(OBJS)

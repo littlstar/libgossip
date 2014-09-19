@@ -13,6 +13,11 @@
 
 @implementation GossipPipe
 
+  - (id) init {
+    self.domain = AF_SP;
+    return self;
+  }
+
   - (id) push: (char *) message {
     int size = strlen(message) + 1; // +1 for '/0'
     return [self push: message size: size];

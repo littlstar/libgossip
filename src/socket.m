@@ -9,6 +9,7 @@
 #include <string.h>
 #include <errno.h>
 #include <nanomsg/nn.h>
+#include <nanomsg/pipeline.h>
 
 #import "gossip/socket.h"
 
@@ -16,6 +17,11 @@
   + (const char *) Error {
     return nn_strerror(errno);
   }
+
+  + (int) PULL { return NN_PULL; }
+  + (int) PUSH { return NN_PUSH; }
+  + (int) REQ { return NN_PUSH; }
+  + (int) REP { return NN_PULL; }
 
   - (id) init {
     [super init];

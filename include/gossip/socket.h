@@ -32,6 +32,15 @@ typedef void (^GossipSocketReceiveBlock)(void *, size_t);
 @property (readonly) BOOL isBound;
 
   /**
+   * Socket types
+   */
+
+  + (int) PULL;
+  + (int) PUSH;
+  + (int) REQ;
+  + (int) REP;
+
+  /**
    * Returns error string for socket
    */
 
