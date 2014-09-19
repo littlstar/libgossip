@@ -200,16 +200,14 @@ typedef void (^GossipSocketReceiveBlock)(void *, size_t);
  * `GossipSocket' interface
  */
 
-@interface GossipSocket : GossipObject <GossipObjectProtocol> {
-  int _errno;
-}
-
-@property (nonatomic) int fd;
+@interface GossipSocket : GossipObject <GossipObjectProtocol>
 @property (nonatomic) int domain;
 @property (nonatomic) int protocol;
-@property (nonatomic) BOOL isConnected;
-@property (nonatomic) BOOL isBound;
-@property (nonatomic, readonly) int errno = _errno;
+@property (nonatomic, readonly) int eid;
+@property (nonatomic, readonly) int fd;
+@property (nonatomic, readonly) BOOL hasError;
+@property (nonatomic, readonly) BOOL isConnected;
+@property (nonatomic, readonly) BOOL isBound;
 
   /**
    * Open socket
@@ -260,22 +258,28 @@ typedef void (^GossipSocketReceiveBlock)(void *, size_t);
    * Receives a message calling block
    */
 
-  - (void *) receive: (GossipSocketReceiveBlock);
+  - (id) receive: (GossipSocketReceiveBlock) block;
 
   /**
    * Receives a message with size calling block
    */
 
-  - (void *) receive: (GossipSocketReceiveBlock)
-                size: (size_t) size;
+  - (id) receive: (GossipSocketReceiveBlock) block
+            size: (size_t) size;
 
   /**
    * Receives a message with size calling block
    */
 
-  - (void *) receive: (GossipSocketReceiveBlock)
-                size: (size_t) size
-               flags: (int) flags;
+  - (id) receive: (GossipSocketReceiveBlock) block
+            size: (size_t) size
+           flags: (int) flags;
+
+  /**
+   * Shuts down an open socket
+   */
+
+  - (BOOL) shutdown;
 
 @end
 
