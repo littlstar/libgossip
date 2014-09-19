@@ -17,7 +17,12 @@ typedef void (^GossipSocketReceiveBlock)(void *, size_t);
  * `GossipSocket' interface
  */
 
-@interface GossipSocket : GossipObject <GossipObjectProtocol>
+@interface GossipSocket : GossipObject <GossipObjectProtocol> {
+  @protected BOOL _hasError;
+  @protected BOOL _isConnected;
+  @protected BOOL _isBound;
+}
+
 @property (nonatomic) int domain;
 @property (nonatomic) int protocol;
 @property (nonatomic, readonly) int eid;
@@ -60,20 +65,20 @@ typedef void (^GossipSocketReceiveBlock)(void *, size_t);
    * Send buffer
    */
 
-  - (id) send: (const char *) buffer;
+  - (id) send: (const void *) buffer;
 
   /**
    * Send buffer with size
    */
 
-  - (id) send: (const char *) buffer
+  - (id) send: (const void *) buffer
          size: (size_t) size;
 
   /**
    * Send buffer with size and flags
    */
 
-  - (id) send: (const char *) buffer
+  - (id) send: (const void *) buffer
          size: (size_t) size
         flags: (int) flags;
 

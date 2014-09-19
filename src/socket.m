@@ -71,16 +71,16 @@
     return self;
   }
 
-  - (id) send: (const char *) buffer {
+  - (id) send: (const void *) buffer {
     size_t size = strlen(buffer);
     return [self send: buffer size: size];
   }
 
-  - (id) send: (const char *) buffer size: (size_t) size {
+  - (id) send: (const void *) buffer size: (size_t) size {
     return [self send: buffer size: size flags: 0];
   }
 
-  - (id) send: (const char *) buffer size: (size_t) size flags: (int) flags {
+  - (id) send: (const void *) buffer size: (size_t) size flags: (int) flags {
     if (-1 == nn_send(_fd, buffer, size, flags)) {
       _hasError = YES;
     }
