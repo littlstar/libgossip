@@ -13,7 +13,7 @@ TESTS = $(wildcard test/*.m)
 TARGET_LIBRAY = libgossip.so
 
 CFLAGS += -Iinclude
-LDFLAGS += -lobjc
+LDFLAGS += -lobjc -lnanomsg
 LDFLAGS += -shared -Wl -o $(TARGET_LIBRAY)
 
 ifndef V

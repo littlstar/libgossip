@@ -201,6 +201,49 @@
 @property (nonatomic) int fd;
 @property (nonatomic) int domain;
 @property (nonatomic) int protocol;
+
+  /**
+   * Open socket
+   */
+
+  - (id) open;
+
+  /**
+   * Close socket
+   */
+
+  - (id) close;
+
+  /**
+   * Bind socket to address
+   */
+
+  - (id) bind: (const char *) address;
+
+  /**
+   * Connect socket to address
+   */
+
+  - (id) connect: (const char *) address;
+
+  /**
+   * Send buffer
+   */
+
+  - (id) send: (const char *) buffer;
+
+  /**
+   * Send buffer with size
+   */
+
+  - (id) send: (const char *) buffer size: (size_t) size;
+
+  /**
+   * Send buffer with size and flags
+   */
+
+  - (id) send: (const char *) buffer size: (size_t) size flags: (int) flags;
+
 @end
 
 #endif
