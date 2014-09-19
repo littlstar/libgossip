@@ -1,6 +1,6 @@
 
 /**
- * `object.m' - libgossip
+ * `socket.m' - libgossip
  *
  * copyright (c) 2014 - joseph werle <joseph.werle@gmail.com>
  */
@@ -10,7 +10,7 @@
 #include <errno.h>
 #include <nanomsg/nn.h>
 
-#import "gossip.h"
+#import "gossip/socket.h"
 
 @implementation GossipSocket : GossipObject
   + (const char *) Error {
