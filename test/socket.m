@@ -17,5 +17,6 @@ main (void) {
   socket.domain = AF_SP;
   socket.protocol = NN_PULL;
   [socket open];
+  [socket bind: "tcp://127.0.0.1:8888"];
   return 0;
 }

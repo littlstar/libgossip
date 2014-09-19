@@ -190,14 +190,13 @@
 @interface GossipObject <GossipObjectProtocol> {
   Class isa;
 }
-
 @end
 
 /**
  * `GossipSocket' interface
  */
 
-@interface GossipSocket : GossipObject
+@interface GossipSocket : GossipObject <GossipObjectProtocol>
 @property (nonatomic) int fd;
 @property (nonatomic) int domain;
 @property (nonatomic) int protocol;
@@ -245,7 +244,7 @@
    */
 
   - (id) send: (const char *) buffer size: (size_t) size flags: (int) flags;
-
 @end
 
 #endif
+

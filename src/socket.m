@@ -34,6 +34,7 @@
   - (id) close {
     if (0 != _fd) {
       if (0 != nn_close(_fd)) {
+        perror("[GossipSocket close]");
         // @TODO - handle with error
       }
     }
@@ -43,6 +44,7 @@
 
   - (id) bind: (const char *) address {
     if (-1 == nn_bind(_fd, address)) {
+      perror("[GossipSocket bind]");
       // @TODO - handle with error
     } else {
       _isBound = YES;
@@ -53,6 +55,7 @@
 
   - (id) connect: (const char *) address {
     if (-1 == nn_connect(_fd, address)) {
+      perror("[GossipSocket connect]");
       // @TODO - handle with error
     } else {
       _isConnected = YES;
@@ -72,6 +75,7 @@
 
   - (id) send: (const char *) buffer size: (size_t) size flags: (int) flags {
     if (-1 == nn_send(_fd, buffer, size, flags)) {
+      perror("[GossipSocket send]");
       // @TODO - handle with error
     }
     return self;
