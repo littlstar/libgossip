@@ -201,6 +201,8 @@
 @property (nonatomic) int fd;
 @property (nonatomic) int domain;
 @property (nonatomic) int protocol;
+@property (nonatomic) BOOL isConnected;
+@property (nonatomic) BOOL isBound;
 
   /**
    * Open socket

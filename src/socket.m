@@ -17,6 +17,8 @@
     _fd = 0;
     _domain = 0;
     _protocol = 0;
+    _isConnected = NO;
+    _isBound = NO;
     return self;
   }
 
@@ -42,6 +44,8 @@
   - (id) bind: (const char *) address {
     if (-1 == nn_bind(_fd, address)) {
       // @TODO - handle with error
+    } else {
+      _isBound = YES;
     }
 
     return self;
@@ -50,6 +54,8 @@
   - (id) connect: (const char *) address {
     if (-1 == nn_connect(_fd, address)) {
       // @TODO - handle with error
+    } else {
+      _isConnected = YES;
     }
 
     return self;
