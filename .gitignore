@@ -28,3 +28,5 @@ DerivedData
 
 *.so*
 *.o
+test/object
+test/socket

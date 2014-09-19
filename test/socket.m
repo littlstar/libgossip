@@ -10,7 +10,8 @@ int
 main (void) {
   GossipSocket *socket = [GossipSocket new];
   assert(socket);
-  socket.fd = 1234;
-  printf("%d\n", socket.fd);
+  assert(0 == socket.fd);
+  assert(0 == socket.domain);
+  assert(0 == socket.protocol);
   return 0;
 }

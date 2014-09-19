@@ -5,11 +5,9 @@
  * copyright (c) 2014 - joseph werle <joseph.werle@gmail.com>
  */
 
+// the other option is to reference `OBJC_ROOT_CLASS'
 #pragma GCC diagnostic ignored "-Wobjc-root-class"
 
-#include <objc/objc.h>
-#include <objc/Object.h>
-#include <objc/runtime.h>
 #include <objc/message.h>
 #import "gossip.h"
 

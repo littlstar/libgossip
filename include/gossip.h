@@ -8,6 +8,10 @@
 #ifndef GOSSIP_H
 #define GOSSIP_H
 
+#if ! __OBJC2__
+#error "libgossip needs at least Objective-C 2"
+#endif
+
 #include <stdarg.h>
 #include <objc/objc.h>
 
@@ -193,15 +197,10 @@
  * `GossipSocket' interface
  */
 
-@interface GossipSocket : GossipObject {
-
-}
-
+@interface GossipSocket : GossipObject
 @property (nonatomic) int fd;
 @property (nonatomic) int domain;
 @property (nonatomic) int protocol;
-
-
 @end
 
 #endif

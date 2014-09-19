@@ -33,7 +33,7 @@ $(OBJS):
 	$(CC) $(CFLAGS) -c $(@:.o=.m) -o $(@)
 
 test: $(TESTS)
-$(TESTS):
+$(TESTS): $(TARGET_LIBRAY)
 	$(TEST) $(CFLAGS) -lobjc $(TARGET_LIBRAY) $(@) -o $(@:.m=)
 	@./$(@:.m=)
 

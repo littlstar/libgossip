@@ -12,9 +12,10 @@
 
 @implementation Person : GossipObject
 - (id) init {
-  _firstName = "";
-  _lastName = "";
-  //_age = 0;
+  [super init];
+  _firstName = NULL;
+  _lastName = NULL;
+  _age = 0;
   return self;
 }
 
@@ -23,10 +24,20 @@
 int
 main (void) {
   Person *joe = [Person new];
+
   assert(joe);
+  assert(NULL == joe.firstName);
+  assert(NULL == joe.lastName);
+  assert(0 == joe.age);
+
   joe.firstName = "Joseph";
   joe.lastName = "Werle";
+  joe.age = 24;
+
   assert("Joseph" == joe.firstName);
   assert("Werle" == joe.lastName);
+  assert(24 == joe.age);
+
   return 0;
 }
+
