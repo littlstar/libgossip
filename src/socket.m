@@ -42,6 +42,9 @@
     return self;
   }
 
+  - (int) fd { return _fd; }
+  - (int) eid { return _eid; }
+
   - (BOOL) hasError { return _hasError; }
   - (BOOL) isConnected { return _isConnected; }
   - (BOOL) isBound { return _isBound; }

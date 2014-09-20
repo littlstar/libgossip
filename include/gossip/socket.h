@@ -29,6 +29,8 @@ typedef void (^GossipSocketReceiveBlock)(void *, size_t);
 
 @property (nonatomic, assign) int domain;
 @property (nonatomic, assign) int protocol;
+@property (nonatomic, readonly) int fd;
+@property (nonatomic, readonly) int eid;
 @property (readonly) BOOL hasError;
 @property (readonly) BOOL isConnected;
 @property (readonly) BOOL isBound;
