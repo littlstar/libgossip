@@ -47,6 +47,8 @@ test_pull (void) {
     assert(0 == strcmp(buf, MSG));
   }];
 
+  assert(NO == pipe.hasError);
+
   return 0;
 }
 
