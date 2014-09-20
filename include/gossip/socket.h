@@ -11,7 +11,7 @@
 #import "common.h"
 #import "object.h"
 
-typedef void (GossipSocketReceiveBlock)(void *, size_t);
+typedef void (^GossipSocketReceiveBlock)(void *, size_t);
 
 /**
  * `GossipSocket' interface
