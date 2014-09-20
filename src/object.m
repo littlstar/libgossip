@@ -18,6 +18,10 @@
 // generate hash
 #define HASHGEN(o) ((unsigned long) o)
 
+#ifdef __objc_INCLUDE_GNU
+#define objc_msgSend objc_msg_sendv
+#endif
+
 @implementation GossipObject
 
   + (id) alloc {

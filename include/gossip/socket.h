@@ -17,16 +17,18 @@ typedef void (GossipSocketReceiveBlock)(void *, size_t);
  * `GossipSocket' interface
  */
 
-@interface GossipSocket : GossipObject <GossipObjectProtocol> {
+@interface GossipSocket : GossipObject {
+  int domain;
+  int protocol;
+  @protected int _eid;
+  @protected int _fd;
   @protected BOOL _hasError;
   @protected BOOL _isConnected;
   @protected BOOL _isBound;
 }
 
-@property (nonatomic) int domain;
-@property (nonatomic) int protocol;
-@property (nonatomic, readonly) int eid;
-@property (nonatomic, readonly) int fd;
+@property (nonatomic, assign) int domain;
+@property (nonatomic, assign) int protocol;
 @property (readonly) BOOL hasError;
 @property (readonly) BOOL isConnected;
 @property (readonly) BOOL isBound;
@@ -39,6 +41,11 @@ typedef void (GossipSocketReceiveBlock)(void *, size_t);
   + (int) PUSH;
   + (int) REQ;
   + (int) REP;
+
+  /**
+   * Accessors
+   */
+
 
   /**
    * Returns error string for socket

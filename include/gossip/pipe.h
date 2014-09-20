@@ -10,7 +10,7 @@
 #import "common.h"
 #import "socket.h"
 
-@interface GossipPipe : GossipSocket <GossipObjectProtocol>
+@interface GossipPipe : GossipSocket
 
   /**
    * Push a string message to pipe

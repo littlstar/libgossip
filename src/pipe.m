@@ -14,7 +14,7 @@
 @implementation GossipPipe
 
   - (id) init {
-    self.domain = AF_SP;
+    domain = AF_SP;
     return self;
   }
 
@@ -30,7 +30,7 @@
       return self;
     }
 
-    if (NN_PUSH != self.protocol) {
+    if (NN_PUSH != protocol) {
       // @TODO - handle with error messages
       _hasError = YES;
       return self;
@@ -46,7 +46,7 @@
       return self;
     }
 
-    if (NN_PULL != self.protocol) {
+    if (NN_PULL != protocol) {
       // @TODO - handle with error messages
       _hasError = YES;
       return self;

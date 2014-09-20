@@ -8,8 +8,8 @@
 #ifndef GOSSIP_COMMON_H
 #define GOSSIP_COMMON_H
 
-#if ! __OBJC2__
+/*#if ! __OBJC2__
 #error "libgossip needs at least Objective-C 2"
-#endif
+#endif*/
 
 #endif

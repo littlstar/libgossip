@@ -41,7 +41,7 @@ test_pull (void) {
   [pipe connect: "tcp://localhost:8888"];
   assert(NO == pipe.hasError);
 
-  [pipe receive: ^void (void *data, size_t size) {
+  [pipe receive:^ (void *data, size_t size) {
     char *buf = (char *) data;
     buf[size] = '\0';
     assert(0 == strcmp(buf, MSG));

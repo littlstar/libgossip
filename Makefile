@@ -14,6 +14,7 @@ TESTSC = $(TESTS:.m=)
 TARGET_LIBRAY = libgossip.so
 
 CFLAGS += -Iinclude
+CFLAGS += -fPIC
 LDFLAGS += -lobjc -lnanomsg
 LDFLAGS += -shared -Wl -o $(TARGET_LIBRAY)
 
@@ -24,7 +25,7 @@ endif
 
 .PHONY: $(OBJS) $(TARGET_LIBRAY) $(TESTS)
 
-all: $(TARGET_LIBRAY) test
+all: $(TARGET_LIBRAY)
 
 $(TARGET_LIBRAY): $(OBJS)
 	$(CC) $(LDFLAGS) $(OBJS)
@@ -35,7 +36,7 @@ $(OBJS):
 
 test: $(TESTSC)
 $(TESTS): $(TARGET_LIBRAY)
-	$(CC) $(CFLAGS) -lobjc $(TARGET_LIBRAY) $(@) -o $(@:.m=)
+	$(CC) $(@) $(TARGET_LIBRAY) $(CFLAGS) -lobjc -lnanomsg -o $(@:.m=)
 
 $(TESTSC): $(TESTS)
 	$(TEST)

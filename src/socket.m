@@ -14,6 +14,9 @@
 #import "gossip/socket.h"
 
 @implementation GossipSocket : GossipObject
+@synthesize domain;
+@synthesize protocol;
+
   + (const char *) Error {
     return nn_strerror(errno);
   }
@@ -28,8 +31,8 @@
 
     // state
     _fd = 0;
-    _domain = 0;
-    _protocol = 0;
+    domain = 0;
+    protocol = 0;
 
     // predicates
     _isConnected = NO;
@@ -39,8 +42,12 @@
     return self;
   }
 
+  - (BOOL) hasError { return _hasError; }
+  - (BOOL) isConnected { return _isConnected; }
+  - (BOOL) isBound { return _isBound; }
+
   - (id) open {
-    _fd = nn_socket(_domain, _protocol);
+    _fd = nn_socket(domain, protocol);
     if (-1 == _fd) {
       _hasError = YES;
     }
@@ -107,7 +114,7 @@
     if (-1 == nread) {
       _hasError = YES;
     } else {
-      if (nil != block) {
+      if (!block) {
         block(buf, nread);
       }
     }

@@ -3,19 +3,30 @@
 #include <assert.h>
 
 #import "gossip.h"
+#import "gossip/object.h"
 
-@interface Person : GossipObject
+@interface Person : GossipObject {
+  char *firstName;
+  char *lastName;
+  int age;
+}
+
 @property (assign) char *firstName;
 @property (assign) char *lastName;
 @property (assign) int age;
+
 @end
 
 @implementation Person : GossipObject
+@synthesize firstName;
+@synthesize lastName;
+@synthesize age;
+
 - (id) init {
   [super init];
-  _firstName = NULL;
-  _lastName = NULL;
-  _age = 0;
+  firstName = NULL;
+  lastName = NULL;
+  age = 0;
   return self;
 }
 
