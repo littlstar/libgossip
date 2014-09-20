@@ -5,19 +5,23 @@
  * copyright (c) 2014 - joseph werle <joseph.werle@gmail.com>
  */
 
+#ifdef __APPLE__
 // the other option is to reference `OBJC_ROOT_CLASS'
 #pragma GCC diagnostic ignored "-Wobjc-root-class"
+#endif
 
+#include <objc/objc.h>
+#include <objc/runtime.h>
 #include <objc/message.h>
 #import "gossip.h"
 
 // generate hash
-#define HASHGEN(o) ((uintptr_t) o)
+#define HASHGEN(o) ((unsigned long) o)
 
 @implementation GossipObject
 
   + (id) alloc {
-    return class_createInstance(self, 0);
+    return (id) class_createInstance(self, 0);
   }
 
   + (id) init {
@@ -40,6 +44,14 @@
     if (OBJC_IS_TAGGED_PTR((id) self)) return;
 #endif
     object_dispose((id) self);
+  }
+
+  + (void) doesNotRecognizeSelector: (SEL) selector {
+    // @TODO - handle with error
+  }
+
+  - (void) doesNotRecognizeSelector: (SEL) selector {
+    // @TODO - handle with error
   }
 
   - (id) forward: (SEL) selector : (va_list) args {
@@ -144,7 +156,7 @@
   }
 
   - (BOOL) respondsToSelector: (SEL) selector {
-    if (nil == selector) return NO;
+    if (0 == selector) return NO;
     Class this = [self class];
     return class_respondsToSelector(this, selector);
   }
@@ -187,16 +199,9 @@
     return (unsigned char *) GOSSIP_OBJECT_CLASS_DESCRIPTION;
   }
 
-  + (void) doesNotRecognizeSelector: (SEL) selector {
-    // @TODO - handle with error
-  }
-
-  - (void) doesNotRecognizeSelector: (SEL) selector {
-    // @TODO - handle with error
-  }
 
   + (id) performSelector: (SEL) selector {
-    if (nil == selector) {
+    if (0 == selector) {
       [self doesNotRecognizeSelector: selector];
     }
 
@@ -204,7 +209,7 @@
   }
 
   - (id) performSelector: (SEL) selector {
-    if (nil == selector) {
+    if (0 == selector) {
       [self doesNotRecognizeSelector: selector];
     }
 
@@ -212,7 +217,7 @@
   }
 
   + (id) performSelector: (SEL) selector withObject: (id) object {
-    if (nil == selector) {
+    if (0 == selector) {
       [self doesNotRecognizeSelector: selector];
     }
 
@@ -220,7 +225,7 @@
   }
 
   - (id) performSelector: (SEL) selector withObject: (id) object {
-    if (nil == selector) {
+    if (0 == selector) {
       [self doesNotRecognizeSelector: selector];
     }
 
@@ -228,7 +233,7 @@
   }
 
   + (id) performSelector: (SEL) selector withObject: (id) a withObject: (id) b {
-    if (nil == selector) {
+    if (0 == selector) {
       [self doesNotRecognizeSelector: selector];
     }
 
@@ -236,7 +241,7 @@
   }
 
   - (id) performSelector: (SEL) selector withObject: (id) a withObject: (id) b {
-    if (nil == selector) {
+    if (0 == selector) {
       [self doesNotRecognizeSelector: selector];
     }
 
