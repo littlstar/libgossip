@@ -8,10 +8,10 @@
 #ifndef GOSSIP_H
 #define GOSSIP_H
 
-#import "gossip/common.h"
-#import "gossip/object.h"
-#import "gossip/socket.h"
-#import "gossip/pipe.h"
+#include "gossip/common.h"
+#include "gossip/object.h"
+#include "gossip/socket.h"
+#include "gossip/pipe.h"
 
 #endif
 

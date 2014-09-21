@@ -1,0 +1,63 @@
+
+AR ?= @AR@
+CC = @CC@
+
+CWD ?= $(shell pwd)
+
+VERSION ?= @VERSION@
+
+SRC = $(wildcard src/*.m)
+OBJS = $(SRC:.m=.o)
+
+TEST =
+TESTS = $(wildcard test/*.m)
+TESTSC = $(TESTS:.m=)
+
+TARGET_NAME ?= @TARGET@
+TARGET_SHARED_LIBRARY ?= lib$(TARGET_NAME).so
+TARGET_STATIC_LIBRARY ?= lib$(TARGET_NAME).a
+
+CFLAGS += @CFLAGS@
+LDFLAGS += @LDFLAGS@
+LDFLAGS += -o $(TARGET_SHARED_LIBRARY)
+
+LIBRARY_DEPENDENCIES = @LIBRARY_DEPENDENCIES@
+
+ifndef V
+BRIEFC = AR CC TEST
+-include make/brief.mk
+endif
+
+.PHONY: $(OBJS) $(TARGET_SHARED_LIBRARY) $(TARGET_STATIC_LIBRARY) $(TESTS)
+
+all: $(TARGET_SHARED_LIBRARY) $(TARGET_STATIC_LIBRARY)
+
+$(OBJS):
+	$(CC) $(CFLAGS) -c $(@:.o=.m) -o $(@)
+
+$(TARGET_SHARED_LIBRARY): $(OBJS)
+	$(CC) $(LDFLAGS) $(LIBRARY_DEPENDENCIES) $(OBJS)
+	@ln -sf $(TARGET_SHARED_LIBRARY) $(TARGET_SHARED_LIBRARY).$(VERSION)
+
+$(TARGET_STATIC_LIBRARY): $(OBJS)
+	$(AR) crus $(TARGET_STATIC_LIBRARY) $(OBJS)
+
+test: $(TESTSC)
+$(TESTS): $(TARGET_STATIC_LIBRARY)
+	$(CC) $(@) $(TARGET_STATIC_LIBRARY) $(LIBRARY_DEPENDENCIES) $(CFLAGS) -o $(@:.m=)
+
+$(TESTSC): $(TESTS)
+	$(TEST)
+	@if "test/pipe" == "$(@)"; then \
+		./$(@) pull & sleep 1; \
+		./$(@) push & wait; \
+	else \
+		./$(@); \
+	fi;
+
+clean:
+	rm -f $(OBJS)
+	rm -f $(wildcard $(TARGET_SHARED_LIBRARY)*)
+	rm -f $(TARGET_STATIC_LIBRARY)
+	rm -f $(TESTS:.m=)
+

@@ -20,6 +20,7 @@
  * `GossipObject' interface protocol
  */
 
+GOSSIP_EXPORT
 @protocol GossipObjectProtocol
 
   /**
@@ -188,6 +189,7 @@
  * `GossipObject' interface
  */
 
+GOSSIP_EXPORT
 @interface GossipObject <GossipObjectProtocol> {
   Class isa;
 }

@@ -1,0 +1,339 @@
+#!/bin/bash
+
+## meta
+SELF="${0}"
+OS="$(uname -s 2>/dev/null)"
+DOTCOLIMIT=40
+
+## library information
+MAINTAINER="joseph@werle.io"
+VERSION="0.0.1"
+
+## global variables for templates
+declare -a local GLOBAL=(
+  ## library
+  VERSION MAINTAINER
+
+  ## system
+  AR CC
+
+  ## compiler
+  TARGET CFLAGS LDFLAGS
+  LIBRARY_DEPENDENCIES
+
+  ## installation
+  PREFIX INCLUDEDIR LIBDIR MANDIR OUTDIR
+)
+
+## usage
+usage () {
+  echo "usage: ${SELF} [options]"
+  echo ""
+  echo "  Configure installation destinations:"
+  echo "    --prefix=PREFIX     Install prefix directory (default: ${PREFIX})"
+  echo "    --includedir=DIR    Header directory (default: ${INCLUDEDIR})"
+  echo "    --libdir=DIR        Library directory (default: ${LIBDIR})"
+  echo "    --mandir=DIR        Man page directory (default: ${MANDIR})"
+  echo "    --target=NAME       Target library name (default: ${TARGET}"
+  echo "    --outt=DIR          Build output directory (default: ${OUTDIR})"
+  echo ""
+  echo "  Environment variables:"
+  echo "    CC        C compiler (default: ${CC})"
+  echo "    PREFIX    Installation prefix directory (default: ${PREFIX})"
+  echo "    TARGET    Target library name (default: ${TARGET}"
+  echo ""
+  echo "  Report bugs to <${MAINTAINER}>"
+  return 0;
+}
+
+## init state
+init () {
+  export CC="${CC:-clang}"
+  export CFLAGS="-Iinclude -fPIC -fblocks"
+  export LDFLAGS="-shared -Wl"
+  export TARGET="${TARGET:-gossip}"
+  export PREFIX="${PREFIX:-/usr/local}"
+  export INCLUDEDIR="${INCLUDEDIR:-${PREFIX}/include}"
+  export LIBDIR="${LIBDIR:-${PREFIX}/lib}"
+  export MANDIR="${MANDIR:-${PREFIX}/man}"
+  export OUTDIR="${OUTDIR:-out/}"
+  export LIBRARY_DEPENDENCIES="-lobjc -lnanomsg -lBlocksRuntime"
+  return 0
+}
+
+## script preamble
+preamble () {
+  echo
+  echo "           OS = $(uname -s)"
+  echo "         USER = $(whoami)"
+  echo "         DATE = $(date)"
+  echo "          PWD = $(pwd)"
+
+  return 0
+}
+
+## template compiler
+template () {
+  rm -f "${2}"
+  cmd="$(echo "sed -e $(eval echo $(for var in ${GLOBAL[@]}; do \
+    echo "\-e \'\"s/@${var}@/\${${var}//\//\\/}/g\"\'";         \
+  done)) "${1}" > "${2}"")"
+
+  ## exec
+  eval ${cmd}
+  return $?
+}
+
+## generate file
+generate () {
+  local out="${1}"
+  local in="${out}.in"
+  task 'generating' "\`${out}'"
+  template "${in}" "${out}"
+  ok
+  return $?
+}
+
+## outut ok and return \`0'
+ok () {
+  echo "ok"
+  return 0
+}
+
+## output yes and return `0'
+yes () {
+  echo "yes"
+  return 0
+}
+
+## output no and return `1'
+no () {
+  echo "no"
+  return 1
+}
+
+## exit with error message
+fail () {
+  {
+    echo
+    echo
+    printf "\terror: %s\n" "${@}"
+  } >&2
+  exit 1
+}
+
+## inform of task
+task () {
+  printf "${1} "
+  shift
+  local let n=${#1}
+  local let p=$(( ${DOTCOLIMIT} - ${n} ))
+  printf "${@}"
+  for (( i = 0; i < p; i++ )); do
+    printf "."
+    #sleep .0001
+  done
+  printf " "
+  return $?
+}
+
+# check for dependency with title
+check () {
+  task 'checking' "${@}"
+}
+
+library () {
+  if ldconfig -p | grep "${1}" 2>&1 > /dev/null; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+## generate files
+generate_files () {
+
+  generate version.h
+  check 'version.h'; {
+    cat << EOF > .cv.c
+#include <stdio.h>
+#include "version.h"
+
+int
+main (void) {
+  printf("%s\n", GOSSIP_VERSION);
+  return 0;
+}
+EOF
+
+  ${CC} -I. .cv.c -o .cv
+  local let rc=$?
+  rm -f .cv.c
+  if (( ${rc} != 0 )); then
+    rm -f .cv
+    fail "Failed to check version.h Compiler error."
+  else
+    if [ "${VERSION}" != "$(./.cv)" ]; then
+      rm -f .cv
+      fail "Version mismatch in generated \`version.h' file."
+    else
+      rm -f .cv
+      ok
+    fi
+  fi
+  }
+
+  generate Makefile
+  check 'Makefile'; {
+    if ! test -f Makefile; then
+      fail "Failed to create \`Makefile'"
+    else
+      ok
+    fi
+  }
+  return 0
+}
+
+## detects system features
+features () {
+  echo
+  echo "Checking system features"
+  echo
+
+  ## clang
+  check 'clang compiler'; {
+    if test $(which clang); then
+      yes
+    else
+      fail "Failed to find a clang compiler. Clang or equvialent is required."
+    fi
+  }
+
+  ## llvm
+  check 'LLVM'; {
+    if test $(which llvmc); then
+      yes
+    else
+      fail "Failed to find llvm compiler. LLVM is requried."
+    fi
+  }
+
+  ## ldconfig
+  check 'ldconfig tool'; {
+    if test $(which ldconfig); then
+      yes
+    else
+      fail "Failed to find ldconfig."
+    fi
+  }
+
+  ## ar
+  check 'ar tool'; {
+    if test $(which ar); then
+      yes
+    else
+      fail "Failed to find ar tool"
+    fi
+  }
+
+  ## libobjc
+  check 'libobjc runtime library'; {
+    if library 'libobjc'; then
+      yes
+    else
+      fail "Failed to find libobjc. Please install Objective-C runtime library"
+    fi
+  }
+
+  ## check for BlocksRuntime
+  check 'Objective-C libBlocksRuntime'; {
+    if library 'libBlocksRuntime'; then
+      yes
+    else
+      fail "Failed to find libBlocksRuntime. Please install the BlocksRuntime \
+        Objective-C library."
+    fi
+  }
+
+  ## check for nanomsg
+  check 'libnanomsg'; {
+    if library 'libnanomsg'; then
+      yes
+    else
+      fail "Failed to find libnanomsg. Pleae install nanosmg."
+    fi
+  }
+
+  ## check main on object compilation
+  check 'object.m'; {
+    ${CC} ${CFLAGS} -c src/object.m -o src/object.o 2>&1 > /dev/null
+    if (( 0 == "${?}" )); then
+      yes
+    else
+      fail "Failed to compile \`object.m' which conforms to \
+        Obective-C root Object implementation."
+    fi
+  }
+
+  return $?
+}
+
+## main configurer
+configure () {
+  local opt value
+
+  ## init defaults
+  init
+
+  for opt in "${@}"; do
+    ## parse opt value
+    case "${opt}" in
+      *=?*) value="$(expr -- "${opt}" : '[^=]*=\(.*\)')" ;;
+      *=) value= ;;
+      *) value=1 ;;
+    esac
+
+    ## parse opt
+    case "${opt}" in
+      -h|--help)
+        usage
+        return 0
+        ;;
+
+      --prefix)
+        PREFIX="${value}"
+        ;;
+
+      --includedir)
+        INCLUDEDIR="${value}"
+        ;;
+
+      --libdir)
+        LIBDIR="${value}"
+        ;;
+
+      --mandir)
+        MANDIR="${value}"
+        ;;
+    esac
+  done
+
+  ## init new values
+  init
+
+  ## meta info
+  preamble
+
+  ## detech system features
+  features
+
+  ## generate files from templates
+  generate_files
+
+  return $?
+}
+
+## run
+(configure "${@}")
+exit $?
+
