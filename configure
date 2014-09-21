@@ -49,7 +49,7 @@ usage () {
 ## init state
 init () {
   export CC="${CC:-clang}"
-  export CFLAGS="-Iinclude -fPIC -fblocks"
+  export CFLAGS="-Iinclude"
   export LDFLAGS="-shared -Wl"
   export TARGET="${TARGET:-gossip}"
   export PREFIX="${PREFIX:-/usr/local}"
@@ -57,7 +57,11 @@ init () {
   export LIBDIR="${LIBDIR:-${PREFIX}/lib}"
   export MANDIR="${MANDIR:-${PREFIX}/man}"
   export OUTDIR="${OUTDIR:-out/}"
-  export LIBRARY_DEPENDENCIES="-lobjc -lnanomsg -lBlocksRuntime"
+  export LIBRARY_DEPENDENCIES="-lobjc -lnanomsg"
+  if [ "${OS}" == "Linux" ]; then
+    CFLAGS+="-fPIC -fblocks"
+    LIBRARY_DEPENDENCIES+="-lBlocksRuntime"
+  fi
   return 0
 }
 
@@ -209,7 +213,7 @@ features () {
 
   ## llvm
   check 'LLVM'; {
-    if test $(which llvmc); then
+    if test $(which llvmc) || test $(which llvm-gcc); then
       yes
     else
       fail "Failed to find llvm compiler. LLVM is requried."
@@ -234,15 +238,17 @@ features () {
     fi
   }
 
-  ## check for BlocksRuntime
-  check 'Objective-C libBlocksRuntime'; {
-    if library 'BlocksRuntime'; then
-      yes
-    else
-      fail "Failed to find libBlocksRuntime. Please install the BlocksRuntime \
-        Objective-C library."
-    fi
-  }
+  ## check for BlocksRuntime on linux
+  if [ "${OS}" == "Linux" ]; then
+    check 'Objective-C libBlocksRuntime'; {
+      if library 'BlocksRuntime'; then
+        yes
+      else
+        fail "Failed to find libBlocksRuntime. Please install the BlocksRuntime \
+          Objective-C library."
+      fi
+    }
+  fi
 
   ## check for nanomsg
   check 'libnanomsg'; {
