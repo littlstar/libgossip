@@ -48,11 +48,11 @@ $(TESTS): $(TARGET_STATIC_LIBRARY)
 
 $(TESTSC): $(TESTS)
 	$(TEST)
-	@if "test/pipe" == "$(@)"; then \
-		./$(@) pull & sleep 1; \
-		./$(@) push & wait; \
-	else \
-		./$(@); \
+	@if "test/pipe" == "$(@)"; then  \
+		./$(@) pull & sleep 1;         \
+		./$(@) push & wait;            \
+	else                             \
+		./$(@);                        \
 	fi;
 
 clean:
