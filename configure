@@ -59,8 +59,8 @@ init () {
   export OUTDIR="${OUTDIR:-out/}"
   export LIBRARY_DEPENDENCIES="-lobjc -lnanomsg"
   if [ "${OS}" == "Linux" ]; then
-    CFLAGS+="-fPIC -fblocks"
-    LIBRARY_DEPENDENCIES+="-lBlocksRuntime"
+    CFLAGS+=" -fPIC -fblocks"
+    LIBRARY_DEPENDENCIES+=" -lBlocksRuntime"
   fi
   return 0
 }
@@ -244,8 +244,7 @@ features () {
       if library 'BlocksRuntime'; then
         yes
       else
-        fail "Failed to find libBlocksRuntime. Please install the BlocksRuntime \
-          Objective-C library."
+        fail "Failed to find libBlocksRuntime. Please install the BlocksRuntime Objective-C library."
       fi
     }
   fi
@@ -265,8 +264,7 @@ features () {
     if (( 0 == "${?}" )); then
       yes
     else
-      fail "Failed to compile \`object.m' which conforms to \
-        Obective-C root Object implementation."
+      fail "Failed to compile \`object.m' which conforms to Obective-C root Object implementation."
     fi
   }
 
