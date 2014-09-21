@@ -143,11 +143,9 @@ check () {
 }
 
 library () {
-  if ldconfig -p | grep "${1}" 2>&1 > /dev/null; then
-    return 0
-  else
-    return 1
-  fi
+  echo 'int main (void) { return (0); }' | \
+    ${CC} -o /dev/null -l${1} -xc - 2>&1 > /dev/null
+  return $?
 }
 
 ## generate files
@@ -218,15 +216,6 @@ features () {
     fi
   }
 
-  ## ldconfig
-  check 'ldconfig tool'; {
-    if test $(which ldconfig); then
-      yes
-    else
-      fail "Failed to find ldconfig."
-    fi
-  }
-
   ## ar
   check 'ar tool'; {
     if test $(which ar); then
@@ -238,7 +227,7 @@ features () {
 
   ## libobjc
   check 'libobjc runtime library'; {
-    if library 'libobjc'; then
+    if library 'objc'; then
       yes
     else
       fail "Failed to find libobjc. Please install Objective-C runtime library"
@@ -247,7 +236,7 @@ features () {
 
   ## check for BlocksRuntime
   check 'Objective-C libBlocksRuntime'; {
-    if library 'libBlocksRuntime'; then
+    if library 'BlocksRuntime'; then
       yes
     else
       fail "Failed to find libBlocksRuntime. Please install the BlocksRuntime \
@@ -257,7 +246,7 @@ features () {
 
   ## check for nanomsg
   check 'libnanomsg'; {
-    if library 'libnanomsg'; then
+    if library 'nanomsg'; then
       yes
     else
       fail "Failed to find libnanomsg. Pleae install nanosmg."
