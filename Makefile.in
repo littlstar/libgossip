@@ -2,6 +2,9 @@
 AR ?= @AR@
 CC = @CC@
 
+CP ?= cp
+MKDIR ?= mkdir
+INSTALL ?= @echo INSTALL $(^) && install $(^)
 DOCKER ?= $(shell which docker)
 
 CWD ?= $(shell pwd)
@@ -25,12 +28,18 @@ LDFLAGS += -o $(TARGET_SHARED_LIBRARY)
 
 LIBRARY_DEPENDENCIES = @LIBRARY_DEPENDENCIES@
 
+PREFIX ?= @PREFIX@
+INCLUDEDIR ?= @INCLUDEDIR@/gossip
+LIBDIR ?= @LIBDIR@
+MANDIR ?= @MANDIR@
+OUTDIR ?= @OUTDIR@
+
 ifndef V
-BRIEFC = AR CC TEST
+BRIEFC = AR CC TEST MKDIR CP
 -include make/brief.mk
 endif
 
-.PHONY: $(OBJS) $(TARGET_SHARED_LIBRARY) $(TARGET_STATIC_LIBRARY) $(TESTS)
+.PHONY: $(TESTS)
 
 all: $(TARGET_SHARED_LIBRARY) $(TARGET_STATIC_LIBRARY)
 
@@ -51,6 +60,23 @@ $(TESTS): $(TARGET_STATIC_LIBRARY)
 $(TESTSC): $(TESTS)
 	$(TEST)
 	@./scripts/test $(@)
+
+$(INCLUDEDIR):
+	$(MKDIR) $(INCLUDEDIR)
+
+.PHONY: $(LIBDIR)
+$(LIBDIR): $(TARGET_STATIC_LIBRARY) $(TARGET_SHARED_LIBRARY)
+	$(INSTALL) $(@)
+
+install: $(INCLUDEDIR) $(LIBDIR)
+	install include/gossip.h $(PREFIX)/include
+	install include/gossip/* $(INCLUDEDIR)
+
+uninstall:
+	rm -rf $(INCLUDEDIR)
+	rm -f $(PREFIX)/include/gossip.h
+	rm -f $(LIBDIR)/$(TARGET_SHARED_LIBRARY)
+	rm -f $(LIBDIR)/$(TARGET_STATIC_LIBRARY)
 
 .PHONY: Dockerfile
 docker: Dockerfile

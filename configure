@@ -231,7 +231,7 @@ EOF
 
 ## detects system features
 features () {
-  local cc_thresh=".1"
+  local cc_thresh=".001"
   echo
   echo "Checking system features...."
   echo
