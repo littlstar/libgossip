@@ -167,7 +167,6 @@ task () {
   printf "${1}"
   for (( i = 0; i < p; i++ )); do
     printf "."
-    sleep .0001
   done
   printf " "
   return $?
@@ -230,6 +229,7 @@ EOF
 
 ## detects system features
 features () {
+  local cc_thresh=".1"
   echo
   echo "Checking system features...."
   echo
@@ -290,18 +290,6 @@ features () {
     fi
   }
 
-
-
-  ## check main on object compilation
-  check 'object.m'; {
-    ${CC} ${CFLAGS} -c src/object.m -o src/object.o 2>&1 > /dev/null
-    if (( 0 == "${?}" )); then
-      yes
-    else
-      fail "Failed to compile \`object.m' which conforms to Obective-C root Object implementation."
-    fi
-  }
-
   ## check required headers
   local headers=(
     'stdio.h' 'string.h' 'string.h' 'errno.h'
@@ -319,7 +307,19 @@ features () {
     else
       fail "Fail to find \`${header}' header file."
     fi
+    sleep cc_thresh
   done
+
+  ## check main on object compilation
+  check 'object.m'; {
+    ${CC} ${CFLAGS} -c src/object.m -o src/object.o 2>&1 > /dev/null
+    if (( 0 == "${?}" )); then
+      yes
+    else
+      fail "Failed to compile \`object.m' which conforms to Obective-C root Object implementation."
+    fi
+    sleep cc_thresh
+  }
 
   return $?
 }
