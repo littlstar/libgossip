@@ -12,7 +12,12 @@
 #import "common.h"
 #import "socket.h"
 
-@interface GossipRadio : GossipSocket
+typedef void (^GossipRadioLoopBlock) (void);
+
+@interface GossipRadio : GossipSocket {
+  GossipRadioLoopBlock _loopBlocks[32];
+  int _loopBlockCount;
+}
 
   /**
    * Send a message and receive response
@@ -29,6 +34,7 @@
           size: (size_t) size
        receive: (GossipSocketReceiveBlock) block;
 
+  - (id) loop: (GossipRadioLoopBlock) block;
 
 @end
 

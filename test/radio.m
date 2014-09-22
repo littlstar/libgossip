@@ -7,6 +7,7 @@
 #import "gossip/radio.h"
 
 #define MSG "HELLO RADIO"
+#define BRIDGE "tcp://127.0.0.1:8888"
 
 // server
 int
@@ -17,8 +18,13 @@ test_node0 (void) {
   [node0 open];
   assert(NO == node0.hasError);
 
-  [node0 bind: "tcp://*:8888"];
+  [node0 bind: BRIDGE];
   assert(NO == node0.hasError);
+
+  [node0 loop:^ (void) {
+    assert(NO == node0.hasError);
+    exit(0);
+  }];
 
   [node0 radio: MSG receive:^ (void *data, size_t size) {
     char *buf = (char *) data;
@@ -26,8 +32,9 @@ test_node0 (void) {
     assert(buf);
     assert(size);
     assert(0 == strncmp(buf, MSG, size));
-    exit(0);
   }];
+
+  assert(NO == node0.hasError);
   return 0;
 }
 
@@ -40,20 +47,25 @@ test_node1 (void) {
   [node1 open];
   assert(NO == node1.hasError);
 
-  [node1 connect: "tcp://localhost:8888"];
+  [node1 connect: BRIDGE];
   assert(NO == node1.hasError);
 
+  [node1 loop:^ (void) {
+    assert(NO == node1.hasError);
+    exit(0);
+  }];
+
   [node1 radio: MSG receive:^ (void *data, size_t size) {
-    printf("Fo\n");
     char *buf = (char *) data;
     assert(data);
     assert(buf);
     assert(size);
     buf[size] = 0;
-    printf("%zu\n", size);
     assert(0 == strncmp(buf, MSG, size));
-    exit(0);
   }];
+
+  assert(NO == node1.hasError);
+
   return 0;
 }
 

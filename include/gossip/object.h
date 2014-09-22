@@ -193,6 +193,7 @@ GOSSIP_EXPORT
 @interface GossipObject <GossipObjectProtocol> {
   Class isa;
 }
+
 @end
 
 #endif

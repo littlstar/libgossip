@@ -18,6 +18,7 @@
     [super init];
     domain = AF_SP;
     protocol = NN_PAIR;
+    _loopBlockCount = 0;
     return self;
   }
 
@@ -31,7 +32,7 @@
        receive: (GossipSocketReceiveBlock) block {
     int to = 100; // timeout
     struct timespec tv = {
-      .tv_sec = 0, .tv_nsec = 1000
+      .tv_sec = 0, .tv_nsec = 100
     };
 
     if (NO == _isConnected && NO == _isBound) {
@@ -50,9 +51,27 @@
       // rest
       nanosleep(&tv, NULL);
       // send response
-      [self send: message size: size + 1];
+      [self send: message size: size];
+      // ignore timeouts
+      if (YES == _hasError && errno == ETIMEDOUT) {
+        _hasError = NO;
+      }
+      {
+        for (int i = 0; i < _loopBlockCount; ++i) {
+          if (_loopBlocks[i]) {
+            _loopBlocks[i]();
+          }
+        }
+      }
     }
 
+    return self;
+  }
+
+  - (id) loop: (GossipRadioLoopBlock) block {
+    if (nil != block) {
+      _loopBlocks[_loopBlockCount++] = block;
+    }
     return self;
   }
 

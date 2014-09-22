@@ -113,14 +113,18 @@
 
   - (id) receive: (GossipSocketReceiveBlock) block size: (size_t) size flags: (int) flags {
     char *buf = NULL;
-    size_t nread = nn_recv(_fd, &buf, size, flags);
+    int nread = nn_recv(_fd, &buf, size, flags);
     if (-1 == nread) {
       _hasError = YES;
     } else {
+      _hasError = NO;
       if (block) {
         block(buf, nread);
-        nn_freemsg(buf);
       }
+    }
+
+    if (NULL != buf) {
+      nn_freemsg(buf);
     }
 
     return self;
