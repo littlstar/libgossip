@@ -66,7 +66,7 @@
   }
 
   - (id) loop: (GossipRadioLoopBlock) block {
-    if (nil != block) {
+    if (block) {
       _loopBlocks[_loopBlockCount++] = block;
     }
     return self;
