@@ -1,0 +1,7 @@
+#!/bin/bash
+
+cd /home/root/libgossip
+./configure
+make clean
+make test V=1
+make clean
