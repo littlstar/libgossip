@@ -9,3 +9,4 @@ version.h
 test/object
 test/socket
 test/pipe
+test/radio
