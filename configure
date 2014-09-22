@@ -60,7 +60,6 @@ init () {
   export MANDIR="${MANDIR:-${PREFIX}/man}"
   export OUTDIR="${OUTDIR:-${CWD}/out/}"
   export LIBRARY_DEPENDENCIES="-lobjc -lnanomsg"
-  echo $OS
   if [ "${OS}" == "Linux" ]; then
     CFLAGS+=" -fPIC -fblocks"
     LIBRARY_DEPENDENCIES+=" -lBlocksRuntime"
