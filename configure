@@ -229,7 +229,7 @@ EOF
 
 ## detects system features
 features () {
-  local cc_thresh=".1"
+  local let cc_thresh=.1
   echo
   echo "Checking system features...."
   echo
@@ -307,7 +307,7 @@ features () {
     else
       fail "Fail to find \`${header}' header file."
     fi
-    sleep cc_thresh
+    sleep ${cc_thresh}
   done
 
   ## check main on object compilation
@@ -318,7 +318,7 @@ features () {
     else
       fail "Failed to compile \`object.m' which conforms to Obective-C root Object implementation."
     fi
-    sleep cc_thresh
+    sleep ${cc_thresh}
   }
 
   return $?
