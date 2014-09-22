@@ -1,12 +1,11 @@
 
-OS ?= @OS@
-AR ?= @AR@
-CC = @CC@
-
-CP ?= cp
-MKDIR ?= mkdir
-INSTALL ?= @echo INSTALL $(^) && install $(^)
-DOCKER ?= $(shell which docker)
+export OS ?= @OS@
+export AR ?= @AR@
+export CC = @CC@
+export CP ?= cp
+export MKDIR ?= mkdir
+export INSTALL ?= @echo INSTALL $(^) && install $(^)
+export DOCKER ?= $(shell which docker)
 
 CWD ?= $(shell pwd)
 
@@ -37,15 +36,17 @@ OUTDIR ?= @OUTDIR@
 
 DOCKER_DEST ?= /home/root/lib@TARGET@
 
+EXAMPLES ?= $(wildcard examples/*)
+
 ifndef V
 BRIEF_ECHO = printf $(BRIEF_FORMAT) $(1) $(2)
-BRIEFC = AR CC TEST MKDIR CP
+BRIEFC = AR CC TEST MKDIR CP MAKE
 -include make/brief.mk
 endif
 
 .PHONY: $(TESTS)
 
-all: $(TARGET_SHARED_LIBRARY) $(TARGET_STATIC_LIBRARY)
+all: $(TARGET_SHARED_LIBRARY) $(TARGET_STATIC_LIBRARY) $(EXAMPLES)
 
 $(OBJS):
 	$(CC) $(CFLAGS) -c $(@:.o=.m) -o $(@)
@@ -93,7 +94,16 @@ docker-test:
 	OS=Linux ./configure
 	$(DOCKER) run -i -v $(CWD):$(DOCKER_DEST) -t lib$(TARGET_NAME) sh $(DOCKER_DEST)/scripts/docker
 
+.PHONY: examples examples/ $(EXAMPLES)
+examples/: examples
+examples: $(EXAMPLES)
+
+$(EXAMPLES):
+	$(MAKE) -C $(@)
+
+
 clean:
+	$(foreach e, $(EXAMPLES), $(MAKE) clean -C $(e))
 	rm -f $(OBJS)
 	rm -f $(wildcard $(TARGET_SHARED_LIBRARY)*)
 	rm -f $(TARGET_STATIC_LIBRARY)
