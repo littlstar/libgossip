@@ -13,6 +13,8 @@
 
 #import "common.h"
 
+#pragma GCC diagnostic ignored "-Wobjc-root-class"
+
 #define GOSSIP_OBJECT_CLASS_DESCRIPTION "[Class GossipObject]"
 #define GOSSIP_OBJECT_RECEIVER_DESCRIPTION "<GossipObject>"
 

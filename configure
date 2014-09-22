@@ -50,6 +50,7 @@ usage () {
 ## init state
 init () {
   export CC="${CC:-clang}"
+  export AR="${AR:-ar}"
   export CFLAGS="-Iinclude"
   export LDFLAGS="-shared -Wl"
   export TARGET="${TARGET:-gossip}"
@@ -112,7 +113,7 @@ summary () {
 template () {
   rm -f "${2}"
   cmd="$(echo "sed -e $(eval echo $(for var in ${GLOBAL[@]}; do \
-    echo "\-e \'\"s/@${var}@/\${${var}//\//\\/}/g\"\'";         \
+    echo "\-e \'\"s/@${var}@/\${${var}//\\//\\\/}/g\"\'";       \
   done)) "${1}" > "${2}"")"
 
   ## exec
@@ -124,6 +125,7 @@ template () {
 generate () {
   local out="${1}"
   local in="${out}.in"
+  rm -f "${out}"
   task 'generating' "${out}"
   template "${in}" "${out}"
   ok
@@ -229,7 +231,7 @@ EOF
 
 ## detects system features
 features () {
-  local let cc_thresh=.1
+  local cc_thresh=".1"
   echo
   echo "Checking system features...."
   echo
@@ -245,10 +247,19 @@ features () {
 
   ## llvm
   check 'LLVM'; {
-    if test $(which llvmc) || test $(which llvm-gcc); then
+  if test $(which llvmc) || test $(which llvm-clang) || test $(which llvm-gcc); then
       yes
     else
       fail "Failed to find llvm compiler. LLVM is requried."
+    fi
+  }
+
+  ## make
+  check 'make'; {
+    if test $(which make); then
+      yes
+    else
+      fail "Failed to find make(1)"
     fi
   }
 
@@ -294,6 +305,7 @@ features () {
   local headers=(
     'stdio.h' 'string.h' 'string.h' 'errno.h'
     'objc/objc.h' 'objc/runtime.h' 'objc/message.h'
+    'nanomsg/nn.h' 'nanomsg/pipeline.h'
   )
   for header in ${headers[@]}; do
     check "${header}"; {

@@ -5,21 +5,19 @@
  * copyright (c) 2014 - joseph werle <joseph.werle@gmail.com>
  */
 
-#ifdef __APPLE__
-// the other option is to reference `OBJC_ROOT_CLASS'
 #pragma GCC diagnostic ignored "-Wobjc-root-class"
-#endif
 
 #include <objc/objc.h>
 #include <objc/runtime.h>
 #include <objc/message.h>
-#import "gossip.h"
+#import "gossip/object.h"
+
 
 // generate hash
 #define HASHGEN(o) ((unsigned long) o)
 
 #ifdef __objc_INCLUDE_GNU
-#define objc_msgSend objc_msg_sendv
+#define objc_msgSend
 #endif
 
 @implementation GossipObject
@@ -209,7 +207,8 @@
       [self doesNotRecognizeSelector: selector];
     }
 
-    return ((id (*) (id, SEL)) objc_msgSend)((id) self, selector);
+    return self;
+    //return ((id (*) (id, SEL)) objc_msgSend)((id) self, selector);
   }
 
   - (id) performSelector: (SEL) selector {
@@ -217,7 +216,8 @@
       [self doesNotRecognizeSelector: selector];
     }
 
-    return ((id (*) (id, SEL)) objc_msgSend)((id) self, selector);
+    return self;
+    //return ((id (*) (id, SEL)) objc_msgSend)((id) self, selector);
   }
 
   + (id) performSelector: (SEL) selector withObject: (id) object {
@@ -225,7 +225,8 @@
       [self doesNotRecognizeSelector: selector];
     }
 
-    return ((id (*) (id, SEL, id)) objc_msgSend)((id) self, selector, object);
+    return self;
+    //return ((id (*) (id, SEL, id)) objc_msgSend)((id) self, selector, object);
   }
 
   - (id) performSelector: (SEL) selector withObject: (id) object {
@@ -233,7 +234,8 @@
       [self doesNotRecognizeSelector: selector];
     }
 
-    return ((id (*) (id, SEL, id)) objc_msgSend)((id) self, selector, object);
+    return self;
+    //return ((id (*) (id, SEL, id)) objc_msgSend)((id) self, selector, object);
   }
 
   + (id) performSelector: (SEL) selector withObject: (id) a withObject: (id) b {
@@ -241,7 +243,8 @@
       [self doesNotRecognizeSelector: selector];
     }
 
-    return ((id (*) (id, SEL, id, id)) objc_msgSend)((id) self, selector, a, b);
+    return self;
+    //return ((id (*) (id, SEL, id, id)) objc_msgSend)((id) self, selector, a, b);
   }
 
   - (id) performSelector: (SEL) selector withObject: (id) a withObject: (id) b {
@@ -249,7 +252,8 @@
       [self doesNotRecognizeSelector: selector];
     }
 
-    return ((id (*) (id, SEL, id, id)) objc_msgSend)((id) self, selector, a, b);
+    return self;
+    //return ((id (*) (id, SEL, id, id)) objc_msgSend)((id) self, selector, a, b);
   }
 
   + (BOOL) isProxy {
