@@ -50,7 +50,7 @@ $(TESTSC): $(TESTS)
 	$(TEST)
 	@if "test/pipe" == "$(@)"; then  \
 		./$(@) pull & sleep 1;         \
-		./$(@) push & wait;            \
+		./$(@) push; wait;             \
 	else                             \
 		./$(@);                        \
 	fi;

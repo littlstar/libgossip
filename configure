@@ -3,7 +3,8 @@
 ## meta
 SELF="${0}"
 OS="$(uname -s 2>/dev/null)"
-DOTCOLIMIT=40
+CWD="$(pwd)"
+DOTCOLIMIT=70
 
 ## library information
 MAINTAINER="joseph@werle.io"
@@ -56,7 +57,7 @@ init () {
   export INCLUDEDIR="${INCLUDEDIR:-${PREFIX}/include}"
   export LIBDIR="${LIBDIR:-${PREFIX}/lib}"
   export MANDIR="${MANDIR:-${PREFIX}/man}"
-  export OUTDIR="${OUTDIR:-out/}"
+  export OUTDIR="${OUTDIR:-${CWD}/out/}"
   export LIBRARY_DEPENDENCIES="-lobjc -lnanomsg"
   if [ "${OS}" == "Linux" ]; then
     CFLAGS+=" -fPIC -fblocks"
@@ -68,10 +69,41 @@ init () {
 ## script preamble
 preamble () {
   echo
-  echo "           OS = $(uname -s)"
-  echo "         USER = $(whoami)"
-  echo "         DATE = $(date)"
-  echo "          PWD = $(pwd)"
+  echo "Configuring libgossip...."
+  echo
+  echo "                         OS = $(uname -s)"
+  echo "                       USER = $(whoami)"
+  echo "                        PWD = \`$(pwd)'"
+
+  return 0
+}
+
+## script summary
+summary () {
+  echo
+  echo "Summary:"
+  echo
+  echo "                     TARGET = lib${TARGET}"
+  echo "                    VERSION = ${VERSION}"
+  echo "                         CC = ${CC}"
+  echo "                     CFLAGS = ${CFLAGS}"
+  echo "                    LDFLAGS = ${LDFLAGS}"
+  echo "                     PREFIX = ${PREFIX}"
+  echo "                 INCLUDEDIR = ${INCLUDEDIR}"
+  echo "                     LIBDIR = ${LIBDIR}"
+  echo "                     MANDIR = ${MANDIR}"
+  echo "                     OUTDIR = ${OUTDIR}"
+  echo
+  echo "Headers will be installed in \`${INCLUDEDIR}'"
+  echo "Libraries will be installed in \`${LIBDIR}'"
+  echo "Man pages will be installed in \`${MANDIR}'"
+
+  echo
+  echo "Installation:"
+  echo
+  echo "$ make"
+  echo "$ make test"
+  echo "$ sudo make install"
 
   return 0
 }
@@ -92,7 +124,7 @@ template () {
 generate () {
   local out="${1}"
   local in="${out}.in"
-  task 'generating' "\`${out}'"
+  task 'generating' "${out}"
   template "${in}" "${out}"
   ok
   return $?
@@ -128,14 +160,14 @@ fail () {
 
 ## inform of task
 task () {
+  local let n=$((${#1} + ${#2}))
   printf "${1} "
   shift
-  local let n=${#1}
   local let p=$(( ${DOTCOLIMIT} - ${n} ))
-  printf "${@}"
+  printf "${1}"
   for (( i = 0; i < p; i++ )); do
     printf "."
-    #sleep .0001
+    sleep .0001
   done
   printf " "
   return $?
@@ -199,7 +231,7 @@ EOF
 ## detects system features
 features () {
   echo
-  echo "Checking system features"
+  echo "Checking system features...."
   echo
 
   ## clang
@@ -258,6 +290,8 @@ features () {
     fi
   }
 
+
+
   ## check main on object compilation
   check 'object.m'; {
     ${CC} ${CFLAGS} -c src/object.m -o src/object.o 2>&1 > /dev/null
@@ -267,6 +301,25 @@ features () {
       fail "Failed to compile \`object.m' which conforms to Obective-C root Object implementation."
     fi
   }
+
+  ## check required headers
+  local headers=(
+    'stdio.h' 'string.h' 'string.h' 'errno.h'
+    'objc/objc.h' 'objc/runtime.h' 'objc/message.h'
+  )
+  for header in ${headers[@]}; do
+    check "${header}"; {
+      {
+        echo "#include <${header}>"
+        echo "int main (void) { return 0; }"
+      } | ${CC} -o /dev/null -xc - 2>&1 >/dev/null
+    }
+    if (( 0 == "${?}" )); then
+      yes
+    else
+      fail "Fail to find \`${header}' header file."
+    fi
+  done
 
   return $?
 }
@@ -322,6 +375,9 @@ configure () {
 
   ## generate files from templates
   generate_files
+
+  ## output summary
+  summary
 
   return $?
 }
