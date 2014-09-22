@@ -4,13 +4,17 @@ test="${1}"
 case "${test}" in
   test/pipe)
     ${test} pull &
+    pid=$!
+    trap "kill ${pid} && exit" SIGTERM SIGINT
     sleep .5
     ${test} push
     ;;
 
   test/radio)
     ${test} node0 &
-    sleep .5
+    pid=$!
+    trap "kill ${pid} && exit" SIGTERM SIGINT
+    sleep 1
     ${test} node1
     ;;
 
@@ -24,6 +28,15 @@ case "${test}" in
       sleep .01
     done
     kill ${pid}
+    ;;
+
+  test/survey)
+    for i in {1..10}; do
+      ${test} client &
+      pid=$!
+      trap "kill ${pid} && exit" SIGTERM SIGINT
+    done
+    ${test} server
     ;;
 
   *)

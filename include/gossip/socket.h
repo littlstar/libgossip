@@ -45,6 +45,8 @@ typedef void (^GossipSocketReceiveBlock) (void *, size_t);
   + (int) REP;
   + (int) PUB;
   + (int) SUB;
+  + (int) SURVEYOR;
+  + (int) RESPONDENT;
 
   /**
    * Returns error string for socket

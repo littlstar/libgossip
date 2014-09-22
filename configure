@@ -16,7 +16,7 @@ declare -a local GLOBAL=(
   VERSION MAINTAINER
 
   ## system
-  AR CC
+  AR CC OS
 
   ## compiler
   TARGET CFLAGS LDFLAGS
@@ -60,6 +60,7 @@ init () {
   export MANDIR="${MANDIR:-${PREFIX}/man}"
   export OUTDIR="${OUTDIR:-${CWD}/out/}"
   export LIBRARY_DEPENDENCIES="-lobjc -lnanomsg"
+  echo $OS
   if [ "${OS}" == "Linux" ]; then
     CFLAGS+=" -fPIC -fblocks"
     LIBRARY_DEPENDENCIES+=" -lBlocksRuntime"
@@ -312,7 +313,7 @@ features () {
 
     ## nanomsg
     'nanomsg/nn.h' 'nanomsg/pipeline.h' 'nanomsg/pair.h'
-    'nanomsg/pubsub.h'
+    'nanomsg/pubsub.h' 'nanomsg/survey.h'
   )
 
   ## test all

@@ -1,4 +1,5 @@
 
+OS ?= @OS@
 AR ?= @AR@
 CC = @CC@
 
@@ -34,7 +35,10 @@ LIBDIR ?= @LIBDIR@
 MANDIR ?= @MANDIR@
 OUTDIR ?= @OUTDIR@
 
+DOCKER_DEST ?= /home/root/lib@TARGET@
+
 ifndef V
+BRIEF_ECHO = printf $(BRIEF_FORMAT) $(1) $(2)
 BRIEFC = AR CC TEST MKDIR CP
 -include make/brief.mk
 endif
@@ -82,11 +86,12 @@ uninstall:
 docker: Dockerfile
 Dockerfile:
 ifneq (, $(DOCKER))
-	$(DOCKER) build -t libgossip .
+	$(DOCKER) build -t lib$(TARGET_NAME) .
 endif
 
 docker-test:
-	$(DOCKER) run -t libgossip make test -C /home/root/libgossip/
+	OS=Linux ./configure
+	$(DOCKER) run -i -v $(CWD):$(DOCKER_DEST) -t lib$(TARGET_NAME) sh $(DOCKER_DEST)/scripts/docker
 
 clean:
 	rm -f $(OBJS)

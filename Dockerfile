@@ -24,7 +24,3 @@ WORKDIR /home/root
 ## nanomsg
 RUN git clone https://github.com/nanomsg/nanomsg.git
 RUN cd nanomsg && ./autogen.sh && ./configure && make && make install && ldconfig
-
-## libgossip
-RUN cd libgossip && ./configure && make
-

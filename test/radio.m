@@ -21,9 +21,12 @@ test_node0 (void) {
   [node0 bind: BRIDGE];
   assert(NO == node0.hasError);
 
+  __block int i = 0;
   [node0 loop:^ (void) {
-    assert(NO == node0.hasError);
-    exit(0);
+    // exit after a successful send <-> receive, send <-> receive
+    if (++i == 2) {
+      exit(0);
+    }
   }];
 
   [node0 radio: MSG receive:^ (void *data, size_t size) {
@@ -51,7 +54,6 @@ test_node1 (void) {
   assert(NO == node1.hasError);
 
   [node1 loop:^ (void) {
-    assert(NO == node1.hasError);
     exit(0);
   }];
 

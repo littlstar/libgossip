@@ -11,6 +11,7 @@
 #include <nanomsg/nn.h>
 #include <nanomsg/pipeline.h>
 #include <nanomsg/pubsub.h>
+#include <nanomsg/survey.h>
 
 #import "gossip/socket.h"
 
@@ -28,6 +29,8 @@
   + (int) REP { return NN_PULL; }
   + (int) PUB { return NN_PUB; }
   + (int) SUB { return NN_SUB; }
+  + (int) SURVEYOR { return NN_SURVEYOR; }
+  + (int) RESPONDENT { return NN_RESPONDENT; }
 
   - (id) init {
     [super init];

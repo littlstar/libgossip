@@ -24,7 +24,7 @@
     [super open];
 
     if (protocol == GossipSocket.SUB) {
-      if (-1 == nn_setsockopt (_fd, NN_SUB, NN_SUB_SUBSCRIBE, "", 0)) {
+      if (-1 == nn_setsockopt(_fd, NN_SUB, NN_SUB_SUBSCRIBE, "", 0)) {
         _hasError = YES;
       }
     }
