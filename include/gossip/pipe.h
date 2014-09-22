@@ -5,8 +5,9 @@
  * copyright (c) 2014 - joseph werle <joseph.werle@gmail.com>
  */
 
-#include <nanomsg/nn.h>
-#include <nanomsg/pipeline.h>
+#ifndef GOSSIP_PIPE_H
+#define GOSSIP_PIPE_H
+
 #import "common.h"
 #import "socket.h"
 
@@ -28,3 +29,5 @@
   - (id) pull: (GossipSocketReceiveBlock) block;
 
 @end
+
+#endif

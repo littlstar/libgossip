@@ -8,12 +8,13 @@
 #include <string.h>
 #include <errno.h>
 #include <nanomsg/nn.h>
-
+#include <nanomsg/pipeline.h>
 #import "gossip/pipe.h"
 
 @implementation GossipPipe
 
   - (id) init {
+    [super init];
     domain = AF_SP;
     return self;
   }

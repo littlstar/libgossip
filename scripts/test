@@ -4,8 +4,14 @@ test="${1}"
 case "${test}" in
   test/pipe)
     ${test} pull &
-    sleep 1
+    sleep .5
     ${test} push
+    ;;
+
+  test/radio)
+    ${test} node0 &
+    sleep .5
+    ${test} node1
     ;;
 
   *)

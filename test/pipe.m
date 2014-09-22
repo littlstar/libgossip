@@ -1,8 +1,7 @@
 
-#include <stdio.h>
 #include <string.h>
-#include <unistd.h>
 #include <assert.h>
+
 #import "gossip/pipe.h"
 
 #define MSG "HELLO"
@@ -18,10 +17,10 @@ test_push (void) {
   [pipe open];
   assert(NO == pipe.hasError);
 
-  [pipe bind: "tcp://*:8888"];
+  [pipe connect: "tcp://localhost:8888"];
   assert(NO == pipe.hasError);
 
-  [pipe send: MSG];
+  [pipe push: MSG];
   assert(NO == pipe.hasError);
 
   return 0;
@@ -38,13 +37,16 @@ test_pull (void) {
   [pipe open];
   assert(NO == pipe.hasError);
 
-  [pipe connect: "tcp://localhost:8888"];
+  [pipe bind: "tcp://*:8888"];
   assert(NO == pipe.hasError);
 
-  [pipe receive:^ (void *data, size_t size) {
+  [pipe pull:^ (void *data, size_t size) {
     char *buf = (char *) data;
-    buf[size] = '\0';
-    assert(0 == strcmp(buf, MSG));
+    assert(data);
+    assert(buf);
+    assert(size);
+    buf[size] = 0;
+    assert(0 == strncmp(buf, MSG, size));
   }];
 
   assert(NO == pipe.hasError);

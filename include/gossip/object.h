@@ -9,8 +9,6 @@
 #define GOSSIP_OBJECT_H
 
 #include <stdarg.h>
-#include <objc/objc.h>
-
 #import "common.h"
 
 #pragma GCC diagnostic ignored "-Wobjc-root-class"

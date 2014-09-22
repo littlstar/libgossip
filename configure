@@ -303,10 +303,17 @@ features () {
 
   ## check required headers
   local headers=(
+    ## stdlib
     'stdio.h' 'string.h' 'string.h' 'errno.h'
+
+    ## objc
     'objc/objc.h' 'objc/runtime.h' 'objc/message.h'
-    'nanomsg/nn.h' 'nanomsg/pipeline.h'
+
+    ## nanomsg
+    'nanomsg/nn.h' 'nanomsg/pipeline.h' 'nanomsg/pair.h'
   )
+
+  ## test all
   for header in ${headers[@]}; do
     check "${header}"; {
       {
