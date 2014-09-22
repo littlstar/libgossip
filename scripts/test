@@ -1,0 +1,19 @@
+#!/bin/bash
+
+test="${1}"
+case "${test}" in
+  test/pipe)
+    ${test} pull &
+    sleep 1
+    ${test} push
+    ;;
+
+  *)
+    ${test}
+    ;;
+esac
+
+rc=$?
+wait
+exit $?
+
