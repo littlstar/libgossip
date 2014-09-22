@@ -43,11 +43,8 @@ typedef void (^GossipSocketReceiveBlock) (void *, size_t);
   + (int) PUSH;
   + (int) REQ;
   + (int) REP;
-
-  /**
-   * Accessors
-   */
-
+  + (int) PUB;
+  + (int) SUB;
 
   /**
    * Returns error string for socket
@@ -83,20 +80,20 @@ typedef void (^GossipSocketReceiveBlock) (void *, size_t);
    * Send buffer
    */
 
-  - (id) send: (const void *) buffer;
+  - (int) send: (const void *) buffer;
 
   /**
    * Send buffer with size
    */
 
-  - (id) send: (const void *) buffer
+  - (int) send: (const void *) buffer
          size: (size_t) size;
 
   /**
    * Send buffer with size and flags
    */
 
-  - (id) send: (const void *) buffer
+  - (int) send: (const void *) buffer
          size: (size_t) size
         flags: (int) flags;
 

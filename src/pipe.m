@@ -19,22 +19,22 @@
     return self;
   }
 
-  - (id) push: (char *) message {
+  - (int) push: (char *) message {
     int size = strlen(message) + 1; // +1 for '/0'
     return [self push: message size: size];
   }
 
-  - (id) push: (void *) message size: (size_t) size {
+  - (int) push: (void *) message size: (size_t) size {
     if (NO == [super isConnected]) {
       // @TODO - handle with error messages
       _hasError = YES;
-      return self;
+      return -1;
     }
 
     if (NN_PUSH != protocol) {
       // @TODO - handle with error messages
       _hasError = YES;
-      return self;
+      return -1;
     }
 
     return [self send: message size: size];

@@ -17,13 +17,13 @@
    * Push a string message to pipe
    */
 
-  - (id) push: (char *) message;
+  - (int) push: (char *) message;
 
   /**
    * Push a message with size to pipe
    */
 
-  - (id) push: (void *) message
+  - (int) push: (void *) message
          size: (size_t) size;
 
   - (id) pull: (GossipSocketReceiveBlock) block;

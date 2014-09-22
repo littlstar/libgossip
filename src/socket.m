@@ -10,6 +10,7 @@
 #include <errno.h>
 #include <nanomsg/nn.h>
 #include <nanomsg/pipeline.h>
+#include <nanomsg/pubsub.h>
 
 #import "gossip/socket.h"
 
@@ -25,6 +26,8 @@
   + (int) PUSH { return NN_PUSH; }
   + (int) REQ { return NN_PUSH; }
   + (int) REP { return NN_PULL; }
+  + (int) PUB { return NN_PUB; }
+  + (int) SUB { return NN_SUB; }
 
   - (id) init {
     [super init];
@@ -40,6 +43,13 @@
     _hasError = NO;
 
     return self;
+  }
+
+  - (void) dealloc {
+    [super dealloc];
+    if (NO == [self shutdown]) {
+      // @TODO - handle with errror
+    }
   }
 
   - (int) fd { return _fd; }
@@ -87,20 +97,19 @@
     return self;
   }
 
-  - (id) send: (const void *) buffer {
+  - (int) send: (const void *) buffer {
     size_t size = strlen(buffer);
     return [self send: buffer size: size];
   }
 
-  - (id) send: (const void *) buffer size: (size_t) size {
+  - (int) send: (const void *) buffer size: (size_t) size {
     return [self send: buffer size: size flags: 0];
   }
 
-  - (id) send: (const void *) buffer size: (size_t) size flags: (int) flags {
-    if (-1 == nn_send(_fd, buffer, size, flags)) {
-      _hasError = YES;
-    }
-    return self;
+  - (int) send: (const void *) buffer size: (size_t) size flags: (int) flags {
+    int sent =nn_send(_fd, buffer, size, flags);
+    if (-1 == sent) { _hasError = YES; }
+    return sent;
   }
 
   - (id) receive: (GossipSocketReceiveBlock) block {

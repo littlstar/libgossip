@@ -12,7 +12,6 @@
 #include <objc/message.h>
 #import "gossip/object.h"
 
-
 // generate hash
 #define HASHGEN(o) ((unsigned long) o)
 

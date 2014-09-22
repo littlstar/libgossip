@@ -31,10 +31,7 @@
           size: (size_t) size
        receive: (GossipSocketReceiveBlock) block {
     int to = 100; // timeout
-    struct timespec tv = {
-      .tv_sec = 0, .tv_nsec = 100
-    };
-
+    struct timespec tv = { .tv_sec = 0, .tv_nsec = 100 };
     if (NO == _isConnected && NO == _isBound) {
       // must be connected or bound to address
       _hasError = YES;

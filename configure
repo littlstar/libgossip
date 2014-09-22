@@ -304,13 +304,15 @@ features () {
   ## check required headers
   local headers=(
     ## stdlib
-    'stdio.h' 'string.h' 'string.h' 'errno.h'
+    'stdio.h' 'stdlib.h' 'string.h' 'errno.h'
+    'assert.h' 'time.h' 'unistd.h'
 
     ## objc
     'objc/objc.h' 'objc/runtime.h' 'objc/message.h'
 
     ## nanomsg
     'nanomsg/nn.h' 'nanomsg/pipeline.h' 'nanomsg/pair.h'
+    'nanomsg/pubsub.h'
   )
 
   ## test all
@@ -321,11 +323,13 @@ features () {
         echo "int main (void) { return 0; }"
       } | ${CC} -o /dev/null -xc - 2>&1 >/dev/null
     }
+
     if (( 0 == "${?}" )); then
       yes
     else
       fail "Fail to find \`${header}' header file."
     fi
+
     sleep ${cc_thresh}
   done
 
@@ -337,6 +341,7 @@ features () {
     else
       fail "Failed to compile \`object.m' which conforms to Obective-C root Object implementation."
     fi
+
     sleep ${cc_thresh}
   }
 

@@ -8,7 +8,6 @@
 #ifndef GOSSIP_RADIO_H
 #define GOSSIP_RADIO_H
 
-#include <nanomsg/pipeline.h>
 #import "common.h"
 #import "socket.h"
 
@@ -33,6 +32,10 @@ typedef void (^GossipRadioLoopBlock) (void);
   - (id) radio: (char *) message
           size: (size_t) size
        receive: (GossipSocketReceiveBlock) block;
+
+  /**
+   * Provides a block to be called for each radio loop
+   */
 
   - (id) loop: (GossipRadioLoopBlock) block;
 
