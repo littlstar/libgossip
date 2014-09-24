@@ -103,7 +103,7 @@ summary () {
   echo "Installation:"
   echo
   echo "$ make"
-  echo "$ make test"
+  echo "$ make check"
   echo "$ sudo make install"
 
   return 0
