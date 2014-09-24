@@ -1,0 +1,9 @@
+{
+  "name": "libgossip",
+  "version": "0.0.1",
+  "repo": "jwerle/libgossip",
+  "description": "Message queueing in Objective-C without Foundation dependency",
+  "keywords": ["message", "queue", "gossip", "protocol", "objective-c"],
+  "install": "./configure && make && make check && make install"
+}
+
