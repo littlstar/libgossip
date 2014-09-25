@@ -10,3 +10,8 @@ test/object
 test/socket
 test/pipe
 test/radio
+test/survey
+test/topic
+examples/pipe/pipe-client
+examples/pipe/pipe-server
+examples/pool/pool-*

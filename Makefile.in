@@ -39,8 +39,7 @@ DOCKER_DEST ?= /home/root/lib@TARGET@
 EXAMPLES ?= $(wildcard examples/*)
 
 ifndef V
-BRIEF_ECHO = printf $(BRIEF_FORMAT) $(1) $(2)
-BRIEFC = AR CC TEST MKDIR CP MAKE
+export BRIEFC = AR CC TEST MKDIR CP MAKE
 -include make/brief.mk
 endif
 
@@ -104,7 +103,7 @@ $(EXAMPLES):
 
 
 clean:
-	$(foreach e, $(EXAMPLES), $(MAKE) clean -C $(e))
+	$(foreach e, $(EXAMPLES), $(shell make clean -C $(e)))
 	rm -f $(OBJS)
 	rm -f $(wildcard $(TARGET_SHARED_LIBRARY)*)
 	rm -f $(TARGET_STATIC_LIBRARY)
